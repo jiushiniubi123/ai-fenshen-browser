@@ -1,0 +1,7 @@
+// build.gradle — AI 分身浏览器工程根脚本
+// 版本钉见 docs/build-recipe.md；AGP 8.13.2 + Kotlin Android 插件 2.2.0，apply false。
+
+plugins {
+    id 'com.android.application' version '8.13.2' apply false
+    id 'org.jetbrains.kotlin.android' version '2.2.0' apply false
+}

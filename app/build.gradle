@@ -1,0 +1,35 @@
+// app/build.gradle — AI 分身浏览器 app 模块
+// 依赖仅 GeckoView 一项；不引入 appcompat / material 等任何其他库（ADR 0003）。
+// 版本钉见 docs/build-recipe.md，一个字符不许改。
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.aifenshen.browser'
+    compileSdk 36
+    buildToolsVersion "36.0.0"
+
+    defaultConfig {
+        applicationId 'com.aifenshen.browser'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    // 唯一允许的 GeckoView 依赖（只存在于 https://maven.mozilla.org/maven2/）
+    implementation 'org.mozilla.geckoview:geckoview:155.0.20260903215306'
+}

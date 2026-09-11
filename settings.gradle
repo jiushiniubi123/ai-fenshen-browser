@@ -1,0 +1,23 @@
+// settings.gradle — AI 分身浏览器工程根配置
+// 版本钉见 docs/build-recipe.md，一个字符不许改。
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // GeckoView 唯一来源（org.mozilla.geckoview:geckoview:155.0.20260903215306 只在此源）
+        maven { url 'https://maven.mozilla.org/maven2/' }
+    }
+}
+
+rootProject.name = 'ai-fenshen-browser'
+include ':app'
