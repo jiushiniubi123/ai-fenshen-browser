@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{报告标题}} · 深度探索</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #f7f6f3; color: #2c2c2a; line-height: 1.8;
+    padding: 48px 20px 80px;
+  }
+  .page { max-width: 720px; margin: 0 auto; background: #fff;
+    border: 1px solid #e8e6e0; border-radius: 16px; padding: 56px 64px; }
+  @media (max-width: 640px) { .page { padding: 32px 24px; } }
+
+  .kicker { font-size: 13px; color: #888780; letter-spacing: 2px; margin-bottom: 12px; }
+  h1 { font-size: 28px; font-weight: 600; line-height: 1.4; margin-bottom: 16px; }
+  .meta { font-size: 13px; color: #888780; margin-bottom: 8px; }
+  .lede { font-size: 15px; color: #5f5e5a; border-left: 3px solid #7f77dd;
+    padding-left: 16px; margin: 24px 0 40px; }
+
+  h2 { font-size: 20px; font-weight: 600; margin: 48px 0 16px;
+    padding-top: 24px; border-top: 1px solid #e8e6e0; }
+  h3 { font-size: 16px; font-weight: 600; margin: 28px 0 10px; }
+  p { font-size: 15px; margin-bottom: 14px; }
+  ul, ol { font-size: 15px; margin: 0 0 14px 24px; }
+  li { margin-bottom: 6px; }
+  strong { font-weight: 600; }
+
+  sup a { color: #534ab7; text-decoration: none; font-size: 12px; padding: 0 1px; }
+  sup a:hover { text-decoration: underline; }
+
+  .term { background: #f1efe8; border-radius: 8px; padding: 12px 16px;
+    font-size: 14px; color: #5f5e5a; margin: 0 0 14px; }
+  .term b { color: #2c2c2a; font-weight: 600; }
+
+  .viewpoint { background: #faf3e7; border-radius: 8px; padding: 12px 16px;
+    font-size: 14px; margin: 0 0 14px; }
+  .viewpoint::before { content: "观点"; display: inline-block; font-size: 12px;
+    color: #854f0b; border: 1px solid #ef9f27; border-radius: 4px;
+    padding: 0 6px; margin-right: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 0 0 16px; }
+  th, td { border: 1px solid #e8e6e0; padding: 8px 12px; text-align: left; }
+  th { background: #f7f6f3; font-weight: 600; }
+
+  .sources h2 { border-top: 1px solid #e8e6e0; }
+  .tier { font-size: 13px; font-weight: 600; margin: 18px 0 8px; }
+  .tier .badge { display: inline-block; border-radius: 4px; padding: 0 6px;
+    margin-right: 6px; font-size: 12px; }
+  .t1 .badge { background: #e1f5ee; color: #0f6e56; }
+  .t2 .badge { background: #e6f1fb; color: #185fa5; }
+  .t3 .badge { background: #f1efe8; color: #5f5e5a; }
+  .sources ol { font-size: 13px; color: #5f5e5a; }
+  .sources a { color: #534ab7; text-decoration: none; word-break: break-all; }
+  .sources a:hover { text-decoration: underline; }
+
+  .caveats { background: #fcebeb; border-radius: 8px; padding: 14px 18px;
+    font-size: 13px; color: #791f1f; margin-top: 32px; }
+  .caveats b { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="kicker">深度探索报告</div>
+  <h1>{{报告标题}}</h1>
+  <div class="meta">生成日期：{{YYYY-MM-DD}}　·　面向读者：{{画像知识水平 + 目标用途一句话}}</div>
+
+  <!-- 开篇导读：这段讲什么、适合谁读、怎么读（2-4 句，对齐画像知识水平） -->
+  <div class="lede">{{开篇导读}}</div>
+
+  <!-- 正文：章节由研究发现驱动，数量不限。按需使用以下组件：
+       - <h2>/<h3> 章节标题；<p> 段落；<ul>/<ol> 列表；<table> 数据对比
+       - 事实声明句内标注来源：……增长 47%。<sup><a href="#s3">[3]</a></sup>
+       - 术语解释（零基础/入门画像）：<div class="term"><b>术语</b>：一句通俗解释。</div>
+       - 观点（与事实分开）：<div class="viewpoint">某社区普遍认为……</div>
+  -->
+  <h2>{{章节一标题}}</h2>
+  <p>{{正文}}<sup><a href="#s1">[1]</a></sup></p>
+
+  <h2>{{章节二标题}}</h2>
+  <p>{{正文}}</p>
+
+  <!-- 来源清单：按等级分组，编号与正文上标一致 -->
+  <div class="sources">
+    <h2>来源</h2>
+    <div class="tier t1"><span class="badge">T1</span>权威来源</div>
+    <ol>
+      <li id="s1">{{来源标题}} — <a href="{{URL}}">{{URL}}</a></li>
+    </ol>
+    <div class="tier t2"><span class="badge">T2</span>专业媒体</div>
+    <ol start="2">
+      <li id="s2">{{来源标题}} — <a href="{{URL}}">{{URL}}</a></li>
+    </ol>
+    <div class="tier t3"><span class="badge">T3</span>社区观点</div>
+    <ol start="3">
+      <li id="s3">{{来源标题}} — <a href="{{URL}}">{{URL}}</a></li>
+    </ol>
+  </div>
+
+  <!-- 稀缺与待验证声明：有则保留，无则整块删除 -->
+  <div class="caveats">
+    <b>可信度声明</b>：{{哪些方向来源稀缺、哪些声明未能溯源、哪些数据存在来源间矛盾}}
+  </div>
+
+</div>
+</body>
+</html>

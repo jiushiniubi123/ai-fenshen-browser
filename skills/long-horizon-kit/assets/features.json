@@ -1,0 +1,39 @@
+{
+  "task": "把这里改成你的任务名",
+  "created": "2026-09-11",
+  "rules": [
+    "passes 只能由 verify.py 翻转，不允许手工改",
+    "一次只做一个功能，做完再挑下一个",
+    "不允许删除或修改测试"
+  ],
+  "baseline_test": "echo replace-with-your-fast-smoke-test",
+  "features": [
+    {
+      "id": "F001",
+      "title": "示例：打通一条最小端到端路径",
+      "acceptance": "一条命令能从输入跑到输出，不报错",
+      "check": "echo example-pass",
+      "passes": false,
+      "verified_at": "",
+      "verified_by": ""
+    },
+    {
+      "id": "F002",
+      "title": "示例：第一个真实功能",
+      "acceptance": "把验收标准写成一句可判断的话，不要写「大致能用」",
+      "check": "echo replace-me-with-your-test-command",
+      "passes": false,
+      "verified_at": "",
+      "verified_by": ""
+    },
+    {
+      "id": "F003",
+      "title": "示例：第二个真实功能",
+      "acceptance": "同上",
+      "check": "echo replace-me-with-your-test-command",
+      "passes": false,
+      "verified_at": "",
+      "verified_by": ""
+    }
+  ]
+}

@@ -8,7 +8,7 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 
 ## 工作方式（ADR 0005/0006，2026-09-12 起）
 
-代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），沙箱凭万能令牌直连仓库 clone→commit→push（ADR 0006）；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。
+代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），沙箱凭万能令牌直连仓库 clone→commit→push（ADR 0006）；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。云端写码照仓库内 `skills/` 技能库执行：先读 `skills/README.md`，写码按 `skills/implement/SKILL.md`（ADR 0007）。
 
 ## 当前状态快照（2026-09-12）
 
@@ -20,6 +20,7 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 | 模拟器 + android-35 镜像 + AVD aifenshen | ✅ 已安装并核对文件齐全（2026-09-12 02:57，见台账）；首次真正开机在 issue #3 验证时确认 |
 | BIOS SVM（AMD 虚拟化） | ✅ 已开启（2026-09-12，enable-svm.ps1 向导验证通过） |
 | Issue 队列 | #3~#13 共 11 个待做；顺序 #3→#4→#5→#7→#8→#9→#10/#11→#12→#13 |
+| matt skills 入库（`skills/`，30 个，ADR 0007） | ✅ 2026-09-12 已推送；云端照 SKILL.md 手册执行，本机负责同步与执行环节 |
 
 ## 用户侧待办（不会编程，指令必须是复制粘贴级）
 
@@ -34,7 +35,7 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 
 ### 提示词（用户直接粘贴）
 
-**A · 云端写作（贴到 Z.ai 网页版）**：整段复制 `.scratch/issue3-sandbox-brief.md` 的内容；若沙箱能 clone 仓库，让它先读 CONTEXT.md 与 docs/adr/0003。
+**A · 云端写作（贴到 Z.ai 网页版）**：整段复制 `.scratch/issue3-sandbox-brief.md` 的内容（2026-09-12 已更新：内含必读 skills/README.md 的技能要求，ADR 0007）；若沙箱能 clone 仓库，让它先读 CONTEXT.md 与 skills/README.md。
 
 **B · 本机验收（贴到 ZCode 新会话）**：
 
@@ -49,7 +50,7 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 - `/wizard` —— 只有用户本人能做的步骤
 - android-dev 技能 + `mcp__android_emulator__*` —— 验证主力
 - computer-use —— 模拟器窗口的兜底操作
-- ⚠️ 云端沙箱（Z.ai 网页版）没有以上任何技能——那边只负责写代码
+- ⚠️ 云端沙箱没有技能运行时，但能读仓库内 `skills/` 快照当手册（ADR 0007）；自动触发与执行环节仍只在本机
 
 ## 沟通红线
 
