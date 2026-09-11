@@ -9,3 +9,19 @@ local.properties
 # 机器记忆（不入云，见 ADR 0005）
 docs/install-ledger.md
 .scratch/
+
+# —— 以下为 issue #3 新增（App 工程落地后的补充拦截）——
+# APK / AAB 产物
+*.apk
+*.aab
+
+# 签名文件（ADR 0006：绝不提交进仓库）
+*.keystore
+*.jks
+
+# 其他 IDE
+.vscode/
+
+# 系统杂项
+.DS_Store
+Thumbs.db

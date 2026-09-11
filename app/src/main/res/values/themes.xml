@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- themes.xml — 零依赖：仅继承平台内置 android:Theme.Material.Light.NoActionBar，
-     不引入 AppCompat / Material Components。 -->
 <resources>
-    <style name="Theme.AiFenshenBrowser" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- 平台内置主题，零依赖（不引 appcompat，ADR 0003） -->
+    <style name="Theme.AiFenshenBrowser" parent="android:Theme.Material.Light.NoActionBar">
+    </style>
 </resources>

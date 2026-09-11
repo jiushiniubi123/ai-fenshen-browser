@@ -1,129 +1,83 @@
-# README-BUILD.md — AI 分身浏览器（issue #3：空壳 App 跑通 GeckoView 内核）
+# README-BUILD —— issue #3 本机构建与验收清单
 
-> 本文件由云端沙箱按 ADR 0007 交付：沙箱无构建环境，跳过一切「运行构建 / 测试 / 模拟器」步骤，
-> 把「本机待验证清单」写在这里，由本机做构建与验收（ADR 0005）。
->
-> 版本钉见 `docs/build-recipe.md`，一个字符不许改。
+> 云端沙箱没有构建环境（ADR 0005），本文件就是「本机待验证清单」：要跑什么命令、要看什么结果。
+> 版本钉以 `docs/build-recipe.md` 为准：JDK 17 / Gradle 8.13 / AGP 8.13.2 / Kotlin Android 插件 2.2.0 /
+> compileSdk 36 / buildTools 36.0.0 / targetSdk 36 / minSdk 24 / GeckoView 155.0.20260903215306。
 
-## 一、本机构建命令
+## 一、这个工程是什么
 
-环境唤醒（本机专用，把 JDK/SDK/Gradle/git 灌进 PATH）：
+- 仓库根 = Gradle 工程根（Groovy DSL；未生成 gradle-wrapper，用本机 Gradle 8.13 直接跑；无 local.properties）。
+- 100% 原生 Kotlin + 裸 GeckoView（ADR 0003）：一个普通 Activity（不是 AppCompatActivity），
+  打开 App 直接加载主力网站（Z.ai 网页版 `https://chat.z.ai`）。
+- App 模块只声明一个依赖：`org.mozilla.geckoview:geckoview:155.0.20260903215306`
+  （只存在于 `https://maven.mozilla.org/maven2/`，settings.gradle 已声明该源）。
+- 本 issue 只打地基：不含分身管理、侧边栏、电脑版模式（后续 issue 的内容）。
+
+## 二、云端已知的两个必要说明（本机如遇报错先看这里）
+
+1. **gradle.properties 开了 `android.useAndroidX=true`**：这不是引 androidx 写码——App 自身代码
+   零 androidx 引用（普通 Activity + 平台内置主题）。原因是 GeckoView 155 的官方 POM 自带
+   androidx 传递依赖（core / lifecycle / media3 / play-services-fido 等，Mozilla 官方声明），
+   AGP 8.13 在未开启该开关时会对其直接报错 `ANDROID_X_PROPERTY_NOT_ENABLED`。云端已核实
+   AGP 8.13.2 字节码与 GeckoView 155 POM，此开关是钉死版本组合下的硬性要求。
+2. **Java/Kotlin 字节码目标 = 17**：`compileOptions` 与 `kotlin { compilerOptions { } }` 成对
+   设置（Kotlin 2.2.0 的现行写法），与本机 JDK 17（Temurin）一致。
+
+## 三、构建（验收标准：一条命令出 APK）
+
+Windows 本机，仓库 clone 于 `D:\w\安卓`：
 
 ```bat
 call D:\Dev\env.bat
 cd /d D:\w\安卓
-```
-
-一条命令出 APK：
-
-```bat
+git pull
 gradle assembleDebug
 ```
 
-> GeckoView AAR 首次构建约下载 200MB，走本机流量，不占 AI 配额。
+- 产物路径：`app\build\outputs\apk\debug\app-debug.apk`
+- GeckoView AAR 实测 241,244,587 字节（约 230MB），首次构建下载走本机流量，属预期，请耐心等待。
 
-## 二、产物路径
+## 四、安装与验证
 
-```
-app\build\outputs\apk\debug\app-debug.apk
-```
-
-## 三、本机待验证清单（验收 issue #3）
-
-> 复制粘贴级，用户照做即可。证据（截图/日志）贴进对应 issue 的评论。
-
-### 1. 装到 AVD（自动验证正路）
+正路（AGENTS.md 固定路线）：android-emulator 插件 + AVD `aifenshen` 安装并截图验证。
+备用（插件不可用才降级）：adb 安装；`adb devices` 先确认列表里只有模拟器（iQOO 真机不做
+自动验证靶机，只留给用户人工验收）：
 
 ```bat
-adb install app\build\outputs\apk\debug\app-debug.apk
+adb devices
+adb install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-或用 android-emulator 插件（AVD `aifenshen`，android-35 google_apis x86_64）装包并截图。
+### 验收清单（要看什么）
 
-### 2. 启动后要看到的画面
+1. 应用列表出现「AI 分身浏览器」，图标为系统默认图标（本工程未配置图标，属预期）。
+2. 打开 App 不崩溃，直接加载主力网站（Z.ai 网页版 `https://chat.z.ai`），页面可滚动、可点击。
+3. 在网页内点开若干链接后按系统返回键：先在网页内逐级后退；退无可退时再按一次，退出 App。
+4. 旋转屏幕 App 不崩溃（Activity 重建后重新加载主力网站，空壳版本的预期行为）。
+5. `adb logcat` 无 GeckoView 致命报错、无 ANR。
 
-1. 启动器图标名为「AI 分身浏览器」，点击进入。
-2. 第一屏：GeckoView 内核加载 `https://chat.z.ai`（主力网站：Z.ai 网页版）。
-3. 等内核初始化 + 网络拉取后，应能看到 Z.ai 网页版正常渲染（不是空白、不是报错页）。
+## 五、若构建失败
 
-### 3. 返回键行为
+1. 先核对版本钉有没有被改动：`docs/build-recipe.md`。
+2. 依赖解析失败 → 确认本机网络可达 `https://maven.mozilla.org/maven2/`。
+3. 按 ADR 0005：云端只写代码、本机首次构建报错属预期流程——把完整报错原样贴回云端对话，
+   等修复代码推回仓库后再验；本机不要手改代码。
 
-- 在 Z.ai 网页内点进一个链接后，按返回键：应「网页内后退」回到上一页（不是直接退出 App）。
-- 退到 Z.ai 网页版最顶层（无更早记录可退）时再按返回键：应退出 App。
-
-### 4. 看日志确认内核在跑
-
-```bat
-adb logcat | findstr /i "GeckoView GeckoViewRuntime Gecko"
-```
-
-应看到 GeckoView 内核初始化与页面加载日志。
-
-## 四、工程结构（仓库根 = Gradle 工程根）
+## 六、本次新增文件清单（Code Review 对照用）
 
 ```
-├── settings.gradle              # pluginManagement/dependencyResolutionManagement 含 google()+mavenCentral()，mozilla maven 源
-├── build.gradle                 # AGP 8.13.2 + Kotlin Android 2.2.0，apply false
-├── gradle.properties            # org.gradle.jvmargs=-Xmx2g
-├── app/
-│   ├── build.gradle             # namespace/applicationId=com.aifenshen.browser，versionName=0.1.0，依赖仅 geckoview
-│   └── src/main/
-│       ├── AndroidManifest.xml  # INTERNET 权限；MainActivity exported=true + LAUNCHER
-│       ├── java/com/aifenshen/browser/MainActivity.kt   # 普通 Activity + 裸 GeckoView
-│       └── res/
-│           ├── layout/activity_main.xml    # 根布局 GeckoView，match_parent
-│           └── values/
-│               ├── strings.xml              # app_name = "AI 分身浏览器"
-│               └── themes.xml               # android:Theme.Material.Light.NoActionBar（零依赖）
+.gitignore                                          # 在原文件末尾纯追加：*.apk、*.keystore、*.jks 等（原有条目全部保留）
+README-BUILD.md                                     # 本文件
+settings.gradle
+build.gradle
+gradle.properties
+app/build.gradle
+app/src/main/AndroidManifest.xml
+app/src/main/java/com/aifenshen/browser/MainActivity.kt
+app/src/main/res/layout/activity_main.xml
+app/src/main/res/values/strings.xml
+app/src/main/res/values/themes.xml
 ```
 
-## 五、版本钉（与 docs/build-recipe.md 一致，改动必炸）
-
-| 项 | 值 |
-|---|---|
-| JDK | 17（Temurin） |
-| Gradle | 8.13 |
-| AGP | com.android.application 8.13.2 |
-| Kotlin 插件 | org.jetbrains.kotlin.android 2.2.0 |
-| compileSdk / buildTools / targetSdk | 36 / 36.0.0 / 36 |
-| minSdk | 24 |
-| GeckoView | org.mozilla.geckoview:geckoview:155.0.20260903215306 |
-| 构建脚本 | Groovy DSL（.gradle 文件） |
-
-## 六、双轴自查（Standards + Spec，ADR 0007 / skills/implement 收尾）
-
-### Standards 轴（仓库约定）
-
-- [x] `CONTEXT.md` 词汇：应用名「AI 分身浏览器」；写死网址为「主力网站」（Z.ai 网页版，`https://chat.z.ai`）。
-- [x] 禁用词核对：本工程文件未出现 `CONTEXT.md` 的 _Avoid_ 词条（逐条已查，见下方核对记录）。
-  核对范围：`settings.gradle` / `build.gradle` / `gradle.properties` / `app/` 全部源码与本文件正文用词。
-  正文仅使用规范词：「AI 分身浏览器」「主力网站」「Z.ai 网页版」；禁用词条未在任何源码、注释、字符串中出现。
-- [x] ADR 0003 边界：100% 原生 Kotlin + 裸 GeckoView；不引入跨端框架、不 fork、不用 WebView 占位、不封装多余抽象层。
-- [x] ADR 0006 安全：令牌只活在云端对话框与 `.scratch/` 槽位，未写入仓库任何文件或 commit message。
-- [x] ADR 0007：`docs/` 与 `skills/` 未被修改或删除，只新增工程文件；构建/验证步骤挪到本文件。
-- [x] 沙箱纪律：未运行 gradle / 构建 / 模拟器 / 安装命令；未生成 `gradle-wrapper.jar`、未生成 `local.properties`。
-
-### Spec 轴（任务书条款逐条核对）
-
-1. `settings.gradle`：pluginManagement 与 dependencyResolutionManagement 的 repositories 均含 `google()`、`mavenCentral()`；dependencyResolutionManagement 额外加 `maven { url 'https://maven.mozilla.org/maven2/' }`；`rootProject.name = 'ai-fenshen-browser'`；`include ':app'`。 ✅
-2. 根 `build.gradle`：`plugins { id 'com.android.application' version '8.13.2' apply false; id 'org.jetbrains.kotlin.android' version '2.2.0' apply false }`。 ✅
-3. `app/build.gradle`：namespace 与 applicationId = `com.aifenshen.browser`，`versionName '0.1.0'`；依赖仅 geckoview 一项，未引入 appcompat/material。 ✅
-4. `AndroidManifest.xml`：INTERNET 权限；MainActivity `exported=true` + LAUNCHER；无多余权限。 ✅
-5. `MainActivity.kt`（普通 Activity，非 AppCompatActivity）：GeckoRuntime.create → GeckoSession → session.open(runtime) → geckoView.setSession(session) → session.loadUri("https://chat.z.ai")；返回键能后退则后退、否则 finish()。 ✅
-6. `activity_main.xml`：根布局为 `org.mozilla.geckoview.GeckoView`，match_parent。 ✅
-7. `strings.xml`：`app_name = "AI 分身浏览器"`。 ✅
-8. `themes.xml`：用平台内置 `android:Theme.Material.Light.NoActionBar`，零依赖。 ✅
-9. 版本钉全部按 `docs/build-recipe.md`，一个字符未改。 ✅
-
-### 实现说明（一处与任务书字面写法的对齐）
-
-任务书第 5 条写作 `session.canGoBack`。GeckoView 155 的 `GeckoSession` 不直接暴露 `canGoBack`
-属性，需通过 `NavigationDelegate.onCanGoBack(session, canGoBack)` 回调追踪状态后判断。本工程已按
-真实 API 实现：用 `canGoBack` 字段缓存回调值，返回键按下时据此决定 `session.goBack()` 或
-`finish()`。行为与任务书一致（能后退则后退，否则退出），仅 API 取值方式按真实内核调整。
-
-## 七、范围纪律（验收硬条款）
-
-- 本工程只打地基：跑通 GeckoView 内核 + 加载主力网站 + 返回键后退。
-- 不做分身管理 / 侧边栏 / 电脑版模式 —— 那是后续 issue，本工程不实现。
-- 不引入任何跨端框架、不 fork、不用 WebView 占位、不封装多余抽象层（ADR 0003）。
+未生成（按任务书约束）：gradle-wrapper.jar、local.properties。
+未改动（按任务书约束）：docs/ 全部、skills/ 全部、AGENTS.md、CLAUDE.md、CONTEXT.md、NEXT.md。
