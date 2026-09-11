@@ -39,6 +39,7 @@
 - 配额硬约束下，代码写作放 **Z.ai 网页版沙箱（GLM-5.3）**，经 Git 回流；本机只做构建、模拟器验证与技能流程。
 - **仓库（origin: jiushiniubi123/ai-fenshen-browser，clone 在 D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源**：云端 agent 能读到的项目记忆 = 仓库内容 + 对话任务书；版本钉死见 `docs/build-recipe.md`，云端一个字符不许改。
 - 云端任务书模板存 `.scratch/`（现成：`issue3-sandbox-brief.md`）；云端产物 = 未编译代码，首次本机构建报错属预期，修 diff 回流入库。
+- **云端默认零凭证**：任务书自包含（要点内联），产物 zip 回流，仓库地址可提可不提（仓库是私有的，沙箱无凭证看不见）。仅当用户主动签发细粒度临时 token（仅此仓库、Contents 读写、短期、用完即吊销）才让沙箱直连 clone/push——届时任务书末尾的「可选块：仓库直连」生效。
 - matt skills 只在本机存在：涉技能流程（/implement、/code-review、/triage、/wayfinder…）一律本机跑，不派云端。
 
 ## Agent skills
