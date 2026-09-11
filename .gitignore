@@ -1,0 +1,11 @@
+# 构建产物与本地配置
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.kotlin/
+
+# 机器记忆（不入云，见 ADR 0005）
+docs/install-ledger.md
+.scratch/
