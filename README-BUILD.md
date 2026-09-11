@@ -60,8 +60,8 @@ adb install -r app\build\outputs\apk\debug\app-debug.apk
 
 1. 先核对版本钉有没有被改动：`docs/build-recipe.md`。
 2. 依赖解析失败 → 确认本机网络可达 `https://maven.mozilla.org/maven2/`。
-3. 按 ADR 0005：云端只写代码、本机首次构建报错属预期流程——把完整报错原样贴回云端对话，
-   等修复代码推回仓库后再验；本机不要手改代码。
+3. 按 ADR 0005 / 0008：云端只写代码、本机首次构建报错属预期流程——把完整报错原样贴回云端对话，
+   等修复代码经 zip 回流进仓库后再验；本机不要手改代码。
 
 ## 六、本次新增文件清单（Code Review 对照用）
 

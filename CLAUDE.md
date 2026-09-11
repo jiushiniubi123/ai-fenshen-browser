@@ -34,13 +34,15 @@
 - 配额优先花在写代码（/implement 各 issue）；验证靠插件工具 + 截图批量判读，不逐轮对话盯屏
 - 机械步骤（环境安装、装包）用脚本后台跑，不在对话里一步步做
 
-## 云端流水线（见 docs/adr/0005、0006、0007）
+## 云端流水线（见 docs/adr/0005、0007、0008）
 
-- 配额硬约束下，代码写作放 **Z.ai 网页版沙箱（GLM-5.3）**，经 Git 回流；本机只做构建、模拟器验证与技能流程。
-- **仓库（origin: jiushiniubi123/ai-fenshen-browser，clone 在 D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源**：云端 agent 能读到的项目记忆 = 仓库内容 + 对话任务书；版本钉死见 `docs/build-recipe.md`，云端一个字符不许改。
-- 云端任务书模板存 `.scratch/`（现成：`issue3-sandbox-brief.md`）；云端产物 = 未编译代码，首次本机构建报错属预期，代码经沙箱推回仓库完成回流。
-- **凭证策略（ADR 0006，2026-09-12 修订）**：仓库公开；云端任务交接 = 仓库地址 + 万能令牌，沙箱凭它直连 clone/push；万能令牌只活在云端对话框与 `.scratch/` 槽位（不入库），绝不写进仓库任何文件或 commit message，怀疑泄露立即吊销重发。
-- matt skills 整库快照随仓库分发在 `skills/`（ADR 0007，源 `C:\Users\A\.zcode\skills\`）：云端写码前必读 `skills/README.md`，把所选 SKILL.md 当手册照做（跳过构建/验证步骤）；技能运行时（自动触发）与执行环节（构建、验证、/code-review、/triage）仍在本机。本机更新技能后需重新同步入库，云端不得改 `skills/`。
+- 配额硬约束下，代码写作放 **Z.ai 网页版沙箱（GLM-5.3）**，产物经 **zip 人工搬运**回流；本机只做构建、模拟器验证与技能流程。
+- **仓库（origin: jiushiniubi123/ai-fenshen-browser，clone 在 D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源**：云端 agent 能读到的项目记忆 = 上传包里的快照内容；版本钉死见 `docs/build-recipe.md`，云端一个字符不许改。
+- **交接凭证：无（ADR 0008，2026-09-12）**：云端沙箱不连 GitHub、不 clone、不 push，流程里不存在任何令牌。旧任务书里的万能令牌已作废，须吊销重发。
+- **上行**：本机 agent 跑 `.scratch/make-upload-zip.py <issue号>` 生成 `.scratch/upload/issue<N>-upload.zip`（仓库 tracked 快照 + 任务书 `TASK.md`，白名单复制），用户把它上传到 Z.ai 对话框并粘贴 NEXT.md 里的短提示词。**快照即事实**：打包那一刻的仓库内容就是云端的全部输入。
+- **下行**：云端交回源码 zip → 用户下载交给本机 agent → 解压进仓库根 → **白名单校验** → 提交推送。回流 zip 只允许新增/覆盖任务书点名的交付物（如 `app/`、`README-BUILD.md`）；`docs/`、`skills/`、`AGENTS.md`、`CLAUDE.md`、`CONTEXT.md`、`NEXT.md` 被改动即拒收。
+- 云端产物 = 未编译代码，首次本机构建报错属预期。
+- matt skills 整库快照随仓库分发在 `skills/`（ADR 0007，源 `C:\Users\A\.zcode\skills\`），快照 zip 会带上整个 `skills/`：云端写码前必读 `skills/README.md`，把所选 SKILL.md 当手册照做（跳过构建/验证步骤）；技能运行时（自动触发）与执行环节（构建、验证、/code-review、/triage）仍在本机。本机更新技能后需重新同步入库，云端不得改 `skills/`。
 
 ## Agent skills
 

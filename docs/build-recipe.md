@@ -2,7 +2,7 @@
 
 > 从 install-ledger 抽出的「可移植」构建事实，供云端沙箱与任何新机器使用。机器路径、环境开关等不可移植部分留在本地 `docs/install-ledger.md`（不入库）。
 >
-> **云端写作纪律**：版本一个字符不许改；只交付源码文件；禁止执行 gradle / 构建 / 模拟器；不生成 gradle-wrapper.jar 与 local.properties。
+> **云端写作纪律**：版本一个字符不许改；只交付源码文件；禁止执行 gradle / 构建 / 模拟器；不生成 gradle-wrapper.jar 与 local.properties；**不连 GitHub、不用任何令牌**（ADR 0008），产物打成 zip 交回。
 
 ## 版本钉（2026-09-12 已在 hello-android 工程实测打出 APK）
 
