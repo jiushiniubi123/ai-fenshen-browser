@@ -8,7 +8,7 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 
 ## 工作方式（ADR 0005/0006，2026-09-12 起）
 
-代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），沙箱凭一次性细粒度令牌直连仓库 clone→commit→push（ADR 0006）；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。
+代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），沙箱凭万能令牌直连仓库 clone→commit→push（ADR 0006）；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。
 
 ## 当前状态快照（2026-09-12）
 
@@ -23,8 +23,8 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 
 ## 用户侧待办（不会编程，指令必须是复制粘贴级）
 
-1. ✅ BIOS SVM 已开启、ZCode 已重启插件生效（2026-09-12 完成）
-2. **签发一次性门禁卡（当前唯一待办）**：Win + R → 粘贴 `notepad D:\w\安卓\.scratch\github-token-guide.md` → 回车，照里面 9 步建好细粒度令牌并粘进任务书槽位，然后对 agent 说「令牌已就位」
+1. ✅ BIOS SVM 已开启、ZCode 已重启插件生效、任务书令牌槽位已由 agent 填好万能令牌（2026-09-12）
+2. **把任务书交给云端（当前唯一待办）**：打开 `D:\w\安卓\.scratch\issue3-sandbox-brief.md`，全选复制整段，粘贴到 Z.ai 网页版（agent 模式）发送；云端写完推送后，回来对 agent 说「云端写完了」
 
 ## 下一步队列（agent 照此执行）
 
