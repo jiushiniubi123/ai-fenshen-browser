@@ -4,11 +4,11 @@
 
 ## 项目一句话
 
-AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI 网站。Spec=issue #1，术语表=`CONTEXT.md`，决策=`docs/adr/0001~0005`，环境台账=`docs/install-ledger.md`，构建版本钉=`docs/build-recipe.md`。
+AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI 网站。Spec=issue #1，术语表=`CONTEXT.md`，决策=`docs/adr/0001~0006`，环境台账=`docs/install-ledger.md`，构建版本钉=`docs/build-recipe.md`。
 
-## 工作方式（ADR 0005，2026-09-12 起）
+## 工作方式（ADR 0005/0006，2026-09-12 起）
 
-代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），经 Git 回流；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。
+代码写作在 **Z.ai 网页版沙箱（GLM-5.3）** 完成（省配额），沙箱凭一次性细粒度令牌直连仓库 clone→commit→push（ADR 0006）；本机只做 **构建 + 模拟器验证 + 技能流程**。仓库（origin: jiushiniubi123/ai-fenshen-browser，clone=D:\w\安卓，仓库根=Gradle 工程根）是唯一事实源。
 
 ## 当前状态快照（2026-09-12）
 
@@ -16,15 +16,15 @@ AI 分身浏览器（GeckoView 原生安卓 App）：多账号使用网页版 AI
 |---|---|
 | 构建链路（JDK17+SDK+Gradle，`D:\Dev`） | ✅ 全通，测试工程已出 APK |
 | 项目记忆上云 | ✅ 约定/术语表/ADR/构建配方/NEXT 已首推入 GitHub 仓库 |
-| android-emulator 插件 | ✅ 已写入启用配置（api_level=35 / AVD aifenshen / sdk=D:\Dev\android-sdk），**等用户重启 ZCode 生效**，生效标志=出现 `mcp__android_emulator__*` 工具 |
-| 模拟器 + android-35 镜像 + AVD aifenshen | ⏳ 后台安装中（脚本 `D:\Dev\setup\install-emulator.bat`，日志同目录；脚本曾因 LF 行尾损坏，已重写修复） |
-| BIOS SVM（AMD 虚拟化） | ❌ 未开 —— **唯一必须用户亲手做的步骤**（向导 `.scratch\enable-svm.ps1` 跑两次） |
+| android-emulator 插件 | ✅ 已生效（2026-09-12 会话确认 `mcp__plugin_android-emulator__*` 工具可用） |
+| 模拟器 + android-35 镜像 + AVD aifenshen | ✅ 已安装并核对文件齐全（2026-09-12 02:57，见台账）；首次真正开机在 issue #3 验证时确认 |
+| BIOS SVM（AMD 虚拟化） | ✅ 已开启（2026-09-12，enable-svm.ps1 向导验证通过） |
 | Issue 队列 | #3~#13 共 11 个待做；顺序 #3→#4→#5→#7→#8→#9→#10/#11→#12→#13 |
 
 ## 用户侧待办（不会编程，指令必须是复制粘贴级）
 
-1. **Win + R** 粘贴运行两次向导 `.scratch\enable-svm.ps1`：第一次跟它进 BIOS 开 SVM（OC → Advanced CPU Configuration → SVM Mode → Enabled → F10），回来再跑一次自动验证
-2. 重启 ZCode（让 android-emulator 插件生效）
+1. ✅ BIOS SVM 已开启、ZCode 已重启插件生效（2026-09-12 完成）
+2. **签发一次性门禁卡（当前唯一待办）**：Win + R → 粘贴 `notepad D:\w\安卓\.scratch\github-token-guide.md` → 回车，照里面 9 步建好细粒度令牌并粘进任务书槽位，然后对 agent 说「令牌已就位」
 
 ## 下一步队列（agent 照此执行）
 
