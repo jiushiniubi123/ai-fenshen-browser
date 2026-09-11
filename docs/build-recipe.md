@@ -27,3 +27,5 @@ adb install app\build\outputs\apk\debug\app-debug.apk
 ```
 
 `call D:\Dev\env.bat` 是本机专用唤醒（JDK/SDK/Gradle/git 进 PATH）；GeckoView AAR 首次构建约下载 200MB，走本机流量，不占 AI 配额。
+
+安装与自动验证：走 android-emulator 插件（AVD `aifenshen`）为正路；用 `adb install` 时先 `adb devices` 确认列表里只有模拟器（`emulator-*`）——iQOO 真机是日常自用机，不做自动验证的靶机，只留给用户做最终人工验收。

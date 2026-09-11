@@ -2,7 +2,7 @@
 
 这个 repo 的 issues 和 specs 存放在 GitHub issues 中。所有操作都使用 `gh` CLI。
 
-**Repo: `jiushiniubi123/ai-fenshen-browser`**（<https://github.com/jiushiniubi123/ai-fenshen-browser>，私有仓库，2026-09-12 创建）。
+**Repo: `jiushiniubi123/ai-fenshen-browser`**（<https://github.com/jiushiniubi123/ai-fenshen-browser>，公开仓库，2026-09-12 创建并于同日转公开——见 ADR 0006）。
 
 ## 运行环境注意事项
 
